@@ -206,8 +206,15 @@ async function runPageOCR(page, pageNum, totalPages, basePct, stepPct) {
   const ctx = canvas.getContext('2d');
 
   await page.render({ canvasContext: ctx, viewport }).promise;
+
+  // Convert relative paths to full absolute URLs for Web Workers
+  const fullWorkerUrl = new URL('./libs/tesseract.worker.min.js', window.location.href).href;
+  const fullCoreUrl = new URL('./libs/tesseract-core-simd.wasm.js', window.location.href).href;
+
   const { data: { text } } = await Tesseract.recognize(canvas, 'eng', {
-    workerPath: OCR_WORKER_URL,
+    workerPath: fullWorkerUrl,
+    corePath: fullCoreUrl,
+    workerBlobURL: false,
     logger: (m) => {
       if (m.status === 'recognizing text') {
         const subPct = basePct + (m.progress * stepPct);
@@ -220,6 +227,7 @@ async function runPageOCR(page, pageNum, totalPages, basePct, stepPct) {
   canvas.height = 0;
   return text.trim() || "(No readable text found on scanned page)";
 }
+
 
 
 async function extractSections(file, sourceType) {
@@ -615,7 +623,9 @@ document.getElementById('convert-form').addEventListener('submit', async (e) => 
       showStatus(`Converted successfully! Downloading ${outName}`);
     }
   } catch (err) {
-    showStatus(`Conversion failed: ${err.message}`, true);
+    console.error("Conversion error:", err);
+    const reason = err?.message || (typeof err === 'string' ? err : 'Worker or library blocked. Check Console (F12).');
+    showStatus(`Conversion failed: ${reason}`, true);
   } finally {
     convertBtn.disabled = false;
     convertBtn.textContent = "Convert & Download File";
