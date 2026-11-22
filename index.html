@@ -4,7 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DocuConvert — Instant File Converter</title>
-  <link rel="stylesheet" href="./styles.css?v=3">
+  <!-- Clean Blue Document Favicon (No extra image file needed) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://w3.org' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232563eb'/%3E%3Cpath d='M10 8h8l4 4v12a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z' fill='%23ffffff'/%3E%3Cpath d='M18 8v4h4' fill='%2393c5fd'/%3E%3C/svg%3E">
+
+  <script>
+    document.write('<link rel="stylesheet" href="./styles.css?v=' + Date.now() + '">');
+  </script>
+
 
   <!-- Local Self-Contained Libraries (Works Offline & on GitHub Pages) -->
   <script src="./libs/pdf.min.js"></script>
@@ -147,6 +153,36 @@
         </div>
       </div>
     </div>
+    <!-- Collapsible FAQ / How It Works (Pure HTML, Zero JS) -->
+    <section class="faq-section">
+      <div class="section-header">
+        <h3>Frequently Asked Questions</h3>
+        <span>How DocuConvert works</span>
+      </div>
+
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>Are my files uploaded to any server?</summary>
+          <p>No. Every conversion runs 100% locally inside your web browser using JavaScript. Your documents and images never leave your computer or phone.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Can it convert scanned or image-based PDFs?</summary>
+          <p>Yes. If a PDF page contains scanned images instead of selectable text, DocuConvert automatically activates built-in Tesseract OCR to read and extract the text.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Are tables and columns preserved during conversion?</summary>
+          <p>Yes. DocuConvert analyzes text coordinates and HTML table structures to rebuild native tables in Word, auto-sized columns in Excel, and bordered grids in PDF.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>How do I report a bug or request a new format?</summary>
+          <p>Click the <strong>Raise Token</strong> button in the top navigation bar to submit a feedback or feature request directly through our GitHub issue tracker.</p>
+        </details>
+      </div>
+    </section>
+
   </main>
   <footer class="site-footer">
     <div class="footer-content">
@@ -183,7 +219,7 @@
             Cancel
           </button>
           <!-- Replace YOUR_USERNAME and YOUR_REPO with your GitHub details -->
-          <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="btn" style="text-decoration: none; display: inline-block;">
+          <a href="https://github.com/chakridhar11/Docuconveter/issues" target="_blank" rel="noopener noreferrer" class="btn" style="text-decoration: none; display: inline-block;">
             Open Token on GitHub
           </a>
         </div>
