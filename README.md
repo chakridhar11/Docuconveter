@@ -1,6 +1,6 @@
 # DocuConvert — Instant Client-Side File Converter
 
-**Live App:** [https://github.io](https://github.io)
+**Live App:** ([https://github.io](https://chakridhar11.github.io/Docuconveter/))
 
 DocuConvert is a 100% browser-based document and image converter. All file parsing, OCR text recognition, table reconstruction, and file generation run locally on your device—**zero files are ever uploaded to a server**.
 
