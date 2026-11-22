@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Strict Content Security Policy (Blocks unauthorized external scripts & connections) -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; worker-src 'self' blob:; connect-src 'self' https://jsdelivr.net;">
+  <meta name="referrer" content="no-referrer">
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DocuConvert — Instant File Converter</title>
@@ -23,6 +27,7 @@
   <script src="./libs/tesseract.min.js"></script>
 </head>
 <body>
+  <script>if(localStorage.getItem('theme')==='dark')document.body.classList.add('dark-mode');</script>
   <nav class="navbar">
     <div class="navbar-brand">
       <span class="brand-dot"></span>
@@ -33,7 +38,7 @@
       <button type="button" class="token-nav-btn" onclick="document.getElementById('token-modal').showModal()">
         Raise Token
       </button>
-      <button type="button" class="theme-toggle" onclick="document.body.classList.toggle('dark-mode')" title="Toggle Dark Mode">
+      <button type="button" class="theme-toggle" onclick="document.body.classList.toggle('dark-mode');localStorage.setItem('theme',document.body.classList.contains('dark-mode')?'dark':'light')" title="Toggle Dark Mode">
         Dark Mode
       </button>
     </div>
