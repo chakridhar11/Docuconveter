@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DocuConvert — Instant File Converter</title>
+  <link rel="stylesheet" href="./styles.css?v=3">
+
+  <!-- Local Self-Contained Libraries (Works Offline & on GitHub Pages) -->
+  <script src="./libs/pdf.min.js"></script>
+  <script src="./libs/mammoth.browser.min.js"></script>
+  <script src="./libs/xlsx.full.min.js"></script>
+  <script src="./libs/jszip.min.js"></script>
+  <script src="./libs/jspdf.umd.min.js"></script>
+  <script src="./libs/docx.umd.js"></script>
+  <script src="./libs/pptxgen.bundle.js"></script>
+  <script src="./libs/tesseract.min.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <span class="brand-dot"></span>
+      DocuConvert
+    </div>
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+      <span class="user-pill">100% Browser-Based • Private</span>
+      <button type="button" class="token-nav-btn" onclick="document.getElementById('token-modal').showModal()">
+        Raise Token
+      </button>
+      <button type="button" class="theme-toggle" onclick="document.body.classList.toggle('dark-mode')" title="Toggle Dark Mode">
+        Dark Mode
+      </button>
+    </div>
+  </nav>
+
+  <header class="hero-banner">
+    <h1>Convert Documents &amp; Images Instantly</h1>
+    <p>Zero server uploads. Built-in OCR, table preservation, and instant downloads right in your browser.</p>
+    <div class="hero-badges">
+      <span><i class="badge-dot"></i> Instant Processing</span>
+      <span><i class="badge-dot"></i> 100% Private</span>
+      <span><i class="badge-dot"></i> 18 File Formats</span>
+    </div>
+  </header>
+
+
+
+  <main class="container">
+    <div id="status-box" class="alert" style="display: none;"></div>
+
+    <!-- Active Conversion Workspace -->
+    <div class="workspace-card">
+      <div class="workspace-top">
+        <div>
+          <h2 id="converter-heading" style="font-size: 1.35rem;">PDF Converter</h2>
+          <p class="auth-subtitle" id="converter-sub" style="margin-bottom: 0;">Convert PDF documents to Word, Excel, or PowerPoint Slides.</p>
+        </div>
+
+        <div>
+          <label style="display: block; margin-bottom: 0.4rem;">Convert To:</label>
+          <div class="format-pills" id="format-pills">
+            <button type="button" class="format-pill active" data-val="docx" onclick="selectFormat(this)">Word (.docx)</button>
+            <button type="button" class="format-pill" data-val="xlsx" onclick="selectFormat(this)">Excel (.xlsx)</button>
+            <button type="button" class="format-pill" data-val="pptx" onclick="selectFormat(this)">Slides (.pptx)</button>
+          </div>
+        </div>
+      </div>
+
+      <form id="convert-form">
+        <input type="hidden" id="source_type" value="pdf">
+        <input type="hidden" id="target_format" value="docx">
+        <input type="file" id="file-input" accept=".pdf" required hidden>
+
+        <div class="dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
+          <div class="upload-symbol"></div>
+          <div class="dropzone-title">Click to choose a file or drag and drop here</div>
+          <div class="dropzone-hint" id="file-hint">Accepted format: .pdf</div>
+          <div id="selected-file-name" class="file-selected-badge" style="display: none;"></div>
+        </div>
+
+        <div id="progress-wrapper" class="progress-wrapper" style="display: none;">
+          <div class="progress-header">
+            <span id="progress-label">Preparing file...</span>
+            <span id="progress-percent">0%</span>
+          </div>
+          <div class="progress-track">
+            <div id="progress-fill" class="progress-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-full" id="convert-btn">Convert &amp; Download File</button>
+      </form>
+    </div>
+
+    <!-- All 6 Converter Categories -->
+    <div class="section-header">
+      <h3>All Conversion Tools</h3>
+      <span>18 supported conversions</span>
+    </div>
+
+    <div class="tool-grid">
+      <div class="tool-card active" onclick="selectTool('pdf', this)">
+        <span class="tool-badge badge-pdf">PDF</span>
+        <div>
+          <div class="tool-title">From PDF</div>
+          <div class="tool-desc">To Word, Excel, or Slides</div>
+        </div>
+      </div>
+
+      <div class="tool-card" onclick="selectTool('word', this)">
+        <span class="tool-badge badge-word">DOCX</span>
+        <div>
+          <div class="tool-title">From Word</div>
+          <div class="tool-desc">To Excel, PDF, or Slides</div>
+        </div>
+      </div>
+
+      <div class="tool-card" onclick="selectTool('excel', this)">
+        <span class="tool-badge badge-excel">XLSX</span>
+        <div>
+          <div class="tool-title">From Excel</div>
+          <div class="tool-desc">To PDF, Slides, or Word</div>
+        </div>
+      </div>
+
+      <div class="tool-card" onclick="selectTool('slide', this)">
+        <span class="tool-badge badge-slide">PPTX</span>
+        <div>
+          <div class="tool-title">From Slides</div>
+          <div class="tool-desc">To PDF, Word, or Excel</div>
+        </div>
+      </div>
+
+      <div class="tool-card" onclick="selectTool('jpg', this)">
+        <span class="tool-badge badge-img">JPG</span>
+        <div>
+          <div class="tool-title">From JPG</div>
+          <div class="tool-desc">To PNG or SVG</div>
+        </div>
+      </div>
+
+      <div class="tool-card" onclick="selectTool('png', this)">
+        <span class="tool-badge badge-img">PNG</span>
+        <div>
+          <div class="tool-title">From PNG</div>
+          <div class="tool-desc">To JPEG, JPG, WebP, or SVG</div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <span class="brand-dot"></span>
+        <strong>DocuConvert</strong> — Client-Side Document &amp; Image Converter
+      </div>
+      <div class="footer-meta">
+        <span>All files are processed locally in your browser. Zero server uploads.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Raise Token / Feedback Modal (Pure HTML, No app.js changes needed) -->
+  <dialog id="token-modal" class="token-dialog">
+    <div class="token-modal-card">
+      <div class="token-modal-header">
+        <div>
+          <h3>Raise a Support or Feedback Token</h3>
+          <p>Report a conversion issue or suggest a new feature.</p>
+        </div>
+        <button type="button" class="token-close-btn" onclick="document.getElementById('token-modal').close()" aria-label="Close">
+          &times;
+        </button>
+      </div>
+
+      <div class="token-form">
+        <p style="font-size: 0.9rem; line-height: 1.5;">
+          All feedback, bug reports, and feature requests are tracked on our GitHub repository.
+        </p>
+
+        <div class="token-actions">
+          <button type="button" class="token-cancel-btn" onclick="document.getElementById('token-modal').close()">
+            Cancel
+          </button>
+          <!-- Replace YOUR_USERNAME and YOUR_REPO with your GitHub details -->
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="btn" style="text-decoration: none; display: inline-block;">
+            Open Token on GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="./app.js"></script>
+</body>
+</html>
