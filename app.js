@@ -161,15 +161,22 @@ dropzone.addEventListener('drop', (e) => {
     updateFileName(e.dataTransfer.files.item(0));
   }
 });
-function confirmAndDownload(blob, filename) {
+async function confirmAndDownload(blob, filename) {
   const sizeKB = (blob.size / 1024).toFixed(1);
-  const sizeText = blob.size >= 1024 * 1024 
-    ? `${(blob.size / (1024 * 1024)).toFixed(2)} MB` 
+  const sizeText = blob.size >= 1024 * 1024
+    ? `${(blob.size / (1024 * 1024)).toFixed(2)} MB`
     : `${sizeKB} KB`;
 
-  const isConfirmed = window.confirm(
-    `Conversion complete!\n\nFile: ${filename}\nSize: ${sizeText}\n\nDo you want to start the download now?`
-  );
+  const modal = document.getElementById('download-modal');
+  document.getElementById('dl-modal-info').textContent = `${filename} (${sizeText}) is ready.`;
+  modal.showModal();
+
+  const isConfirmed = await new Promise((resolve) => {
+    const finish = (result) => { modal.close(); resolve(result); };
+    document.getElementById('dl-confirm-btn').onclick = () => finish(true);
+    document.getElementById('dl-cancel-btn').onclick = () => finish(false);
+    modal.oncancel = () => resolve(false);
+  });
 
   if (!isConfirmed) {
     showStatus(`Download canceled for ${filename}.`, true);
@@ -186,6 +193,7 @@ function confirmAndDownload(blob, filename) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
   return true;
 }
+
 
 async function runPageOCR(page, pageNum, totalPages, basePct, stepPct) {
   if (!window.Tesseract) return "(Scanned Page - OCR library missing)";
@@ -603,7 +611,7 @@ document.getElementById('convert-form').addEventListener('submit', async (e) => 
     }
 
     updateProgress(100, "Conversion complete!");
-    if (outputBlob && confirmAndDownload(outputBlob, outName)) {
+    if (outputBlob && await confirmAndDownload(outputBlob, outName)) {
       showStatus(`Converted successfully! Downloading ${outName}`);
     }
   } catch (err) {
